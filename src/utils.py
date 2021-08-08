@@ -146,6 +146,10 @@ class SpecClass:
 
     def extract_metadata(self, mdata_list):
 
+        # add id metadata
+        self.metadata['id'] = [
+            f'{id_metadata_prefix}{self.namespace_name}#{self.name}']
+
         for _dict in mdata_list:
 
             _key = _dict['name']
@@ -160,10 +164,6 @@ class SpecClass:
 
         # add all default metadata fields
         union_dict(self.metadata, metadata_defaults)
-
-        # add id metadata
-        self.metadata['id'] = [
-            f'{id_metadata_prefix}{self.namespace_name}#{self.name}']
 
     def extract_properties(self, props_list):
 
@@ -237,11 +237,25 @@ class SpecClass:
 
             # write the data_props
             f.write(f'## Properties\n\n')
-            for name, subprops in self.properties.items():
-                f.write(f'- {name}\n')
-                for _key, subprop in subprops.items():
-                    f.write(f'  - {_key}: {" ".join(subprop)}\n')
-                f.write('\n')
+
+            if args.table:
+                header_list = ['type', 'minCount', 'maxCount']
+
+                # print the header
+                f.write('|'+'|'.join(['property']+header_list)+'|\n')
+                f.write('|'+'---|'*(len(header_list)+1)+'\n')
+
+                for name, subprops in self.properties.items():
+                    f.write(f'|{name}')
+                    for subprop in header_list:
+                        f.write(f'|{" ".join(subprops.get(subprop, ["NA"]))}')
+                    f.write('|\n')
+            else:
+                for name, subprops in self.properties.items():
+                    f.write(f'- {name}\n')
+                    for _key, subprop in subprops.items():
+                        f.write(f'  - {_key}: {" ".join(subprop)}\n')
+                    f.write('\n')
 
     def _gen_rdf(self, g: rdflib.Graph):
 
@@ -274,6 +288,10 @@ class SpecProperty:
 
     def extract_metadata(self, mdata_list):
 
+        # add id metadata
+        self.metadata['id'] = [
+            f'{id_metadata_prefix}{self.namespace_name}#{self.name}']
+
         for mdata_line in mdata_list:
 
             _key = mdata_line['name']
@@ -288,10 +306,6 @@ class SpecProperty:
 
         # add all default metadata fields
         union_dict(self.metadata, metadata_defaults)
-
-        # add id metadata
-        self.metadata['id'] = [
-            f'{id_metadata_prefix}{self.namespace_name}#{self.name}']
 
     def dump_md(self, args):
 
@@ -369,6 +383,10 @@ class SpecVocab:
 
     def extract_metadata(self, mdata_list):
 
+        # add id metadata
+        self.metadata['id'] = [
+            f'{id_metadata_prefix}{self.namespace_name}#{self.name}']
+
         for mdata_line in mdata_list:
 
             _key = mdata_line['name']
@@ -383,10 +401,6 @@ class SpecVocab:
 
         # add all default metadata fields
         union_dict(self.metadata, metadata_defaults)
-
-        # add id metadata
-        self.metadata['id'] = [
-            f'{id_metadata_prefix}{self.namespace_name}#{self.name}']
 
     def extract_entries(self, entry_list):
 

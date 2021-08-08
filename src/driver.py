@@ -15,6 +15,9 @@ def get_args():
     argparser.add_argument('--md', action="store_true",
                            help='Dumps markdown')
 
+    argparser.add_argument('--table', action="store_true",
+                           help='Use tabular format in Class for displaying Properties')
+
     argparser.add_argument('--refs', action="store_true",
                            help='Generate References list for Property')
 
@@ -33,7 +36,8 @@ if __name__ == '__main__':
 
     args = get_args()
 
-    logging.basicConfig(format='%(name)-18s: %(levelname)-8s %(message)s')
+    logging.basicConfig(format='%(levelname)-8s: %(message)s')
+    # logging.basicConfig(format='%(name)-18s: %(levelname)-8s %(message)s')
     logger = logging.getLogger()
     for handler in logger.handlers:
         handler.addFilter(ErrorFoundFilter())
